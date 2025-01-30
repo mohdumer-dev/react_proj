@@ -1,21 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import useDebounce from '../hooks/useDebounce'
 
-function useDebounce(text) {
-    const [data, setdata] = useState('dog')
-
-    useEffect(() => {
-        const clock = setTimeout(() => {
-            setdata(text)
-
-        }, 500)
-        return () => {
-            clearTimeout(clock)
-        }
-    }, [text])
-    return data
-
-}
 const Text = () => {
     const [gif, setGif] = useState(null)
     const [text, Settext] = useState('')
@@ -23,8 +9,6 @@ const Text = () => {
     const KEY = import.meta.env.VITE_GRIPHY_API
     const data = useDebounce(text)
    
-
-
     async function Value(datas) {
         
         const response = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${datas}`)
@@ -35,14 +19,10 @@ const Text = () => {
 
     useEffect(() => {
         if(!data)return;
-        console.log(data)
         setGif(null)
         Value(data)
    
     }, [data])
-
-
-
 
     return (
         <div className="w-1/2 py-4 flex flex-col items-center bg-green-300 mt-5 rounded-xl">
