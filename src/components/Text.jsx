@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import useDebounce from '../hooks/useDebounce'
+import Spinner from './Spinner'
+import useGif from '../hooks/useGif'
+
 
 const Text = () => {
-    const [gif, setGif] = useState(null)
-    const [text, Settext] = useState('')
-
-    const KEY = import.meta.env.VITE_GRIPHY_API
+    const [text, Settext] = useState('dog')
     const data = useDebounce(text)
-   
-    async function Value(datas) {
-        
-        const response = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${datas}`)
-        setGif(response.data.data[1].images.fixed_height.url)
-        console.log(response.data.data[1].images.fixed_height.url)
-        
-    }
+    const { gif, FetchMeme } = useGif()
+
+    
 
     useEffect(() => {
-        if(!data)return;
-        setGif(null)
-        Value(data)
-   
+        if (!data) return;
+        FetchMeme(data)
+
     }, [data])
 
     return (
@@ -31,7 +25,7 @@ const Text = () => {
                 Settext(e.target.value)
             }
             } />
-            {gif ? <img src={gif} className='h-54 mt-4 w-56' alt="" /> : <p className='h-54 mt-4 text-center w-56'>Loading</p>}
+            {gif ? (<img src={gif} className='h-54 mt-4 w-56' alt="" />) : <Spinner />}
 
         </div>
     )
